@@ -8,6 +8,10 @@ class Product {
   getInfo() {
     return this.#productInfo;
   }
+
+  decrease(count) {
+    this.#productInfo.quantity -= count;
+  }
 }
 
 export default Product;
