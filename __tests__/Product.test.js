@@ -1,51 +1,43 @@
 import Product from '../src/model/Product.js';
 
 describe('상품 테스트', () => {
-  test('이름, 가격, 개수, 프로모션 정보를 받아 상품을 생성할 수 있다.', () => {
-    const productInfo = {
+  let productInfo;
+  let coke;
+
+  beforeEach(() => {
+    productInfo = {
       name: '콜라',
       price: 1000,
       quantity: 10,
       promotion: '탄산2+1',
     };
-
-    const product = new Product(productInfo);
-
-    expect(product.getInfo()).toEqual(productInfo);
+    coke = new Product(productInfo);
   });
 
-  test('상품 개수를 차감 시킬 수 있다.', () => {
-    const productInfo = {
-      name: '콜라',
-      price: 1000,
-      quantity: 10,
-      promotion: '탄산2+1',
-    };
+  test('상품을 생성할 수 있다.', () => {
+    expect(coke).toBeInstanceOf(Product);
+  });
 
-    const answer = {
-      name: '콜라',
-      price: 1000,
-      quantity: 8,
-      promotion: '탄산2+1',
-    };
+  test('상품의 정보를 조회할 수 있다.', () => {
+    expect(coke.getInfo()).toEqual(productInfo);
+  });
 
-    const coke = new Product(productInfo);
-
+  test('상품 개수를 차감할 수 있다.', () => {
     coke.decrease(2);
-
-    expect(coke.getInfo()).toEqual(answer);
+    expect(coke.getInfo().quantity).toBe(8);
   });
 
-  test('상품 개수를 입력받아 구매 수량이 재고 수량을 초과하였다면 예외처리한다.', () => {
-    const productInfo = {
-      name: '콜라',
-      price: 1000,
-      quantity: 10,
-      promotion: '탄산2+1',
+  test('구매 수량이 재고 수량을 초과하면 예외를 발생시킨다.', () => {
+    expect(() => coke.decrease(100)).toThrow('[ERROR]');
+  });
+
+  test('상품 개수가 변경되었을 때 최신 정보를 조회할 수 있다.', () => {
+    coke.decrease(10);
+    const updatedInfo = {
+      ...productInfo,
+      quantity: 0,
     };
 
-    const coke = new Product(productInfo);
-
-    expect(() => coke.decrease(100)).toThrow('[ERROR]');
+    expect(coke.getInfo()).toEqual(updatedInfo);
   });
 });
