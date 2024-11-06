@@ -10,6 +10,10 @@ class Product {
   }
 
   decrease(count) {
+    if (count > this.#productInfo.quantity) {
+      throw new Error('[ERROR]');
+    }
+
     this.#productInfo.quantity -= count;
   }
 }

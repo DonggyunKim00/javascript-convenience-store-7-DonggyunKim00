@@ -35,4 +35,17 @@ describe('상품 테스트', () => {
 
     expect(coke.getInfo()).toEqual(answer);
   });
+
+  test('상품 개수를 입력받아 구매 수량이 재고 수량을 초과하였다면 예외처리한다.', () => {
+    const productInfo = {
+      name: '콜라',
+      price: 1000,
+      quantity: 10,
+      promotion: '탄산2+1',
+    };
+
+    const coke = new Product(productInfo);
+
+    expect(() => coke.decrease(100)).toThrow('[ERROR]');
+  });
 });
