@@ -36,4 +36,13 @@ describe('재고 테스트', () => {
       { name: '칫솔', price: 3000, quantity: 2, promotion: null },
     ]);
   });
+
+  test('등록되어 있지 않은 상품이라면 예외처리한다.', () => {
+    const confirmProductsInfo = [
+      ['제주산흑돼지', 4],
+      ['면도기', 1],
+    ];
+
+    expect(() => stock.decreaseProducts(confirmProductsInfo)).toThrow('[ERROR]');
+  });
 });

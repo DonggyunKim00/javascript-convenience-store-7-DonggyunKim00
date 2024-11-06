@@ -17,7 +17,11 @@ class Stock {
   }
 
   #findConfirmProduct(name) {
-    return this.#products.find((product) => product.getInfo().name === name);
+    const product = this.#products.find((item) => item.getInfo().name === name);
+
+    if (!product) throw new Error('[ERROR]');
+
+    return product;
   }
 }
 
