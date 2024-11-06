@@ -1,3 +1,5 @@
+import { DateTimes } from '@woowacourse/mission-utils';
+
 class Product {
   #productInfo;
 
@@ -19,6 +21,13 @@ class Product {
     }
 
     this.#productInfo.quantity -= count;
+  }
+
+  isValidPromotion() {
+    const { endDate } = this.#productInfo.promotion;
+    const now = DateTimes.now();
+
+    return new Date(endDate) > new Date(now);
   }
 }
 

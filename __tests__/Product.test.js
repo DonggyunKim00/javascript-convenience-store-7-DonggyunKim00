@@ -5,12 +5,29 @@ describe('상품 테스트', () => {
     name: '콜라',
     price: 1000,
     quantity: 10,
-    promotion: '탄산2+1',
+    promotion: {
+      name: '탄산2+1',
+      get: 1,
+      buy: 2,
+      startDate: '2024-01-01',
+      endDate: '2024-12-31',
+    },
   };
   let coke;
 
   beforeEach(() => {
-    coke = Product.create(['콜라', 1000, 10, '탄산2+1']);
+    coke = Product.create([
+      '콜라',
+      1000,
+      10,
+      {
+        name: '탄산2+1',
+        get: 1,
+        buy: 2,
+        startDate: '2024-01-01',
+        endDate: '2024-12-31',
+      },
+    ]);
   });
 
   test('상품을 생성할 수 있다.', () => {
@@ -23,7 +40,10 @@ describe('상품 테스트', () => {
 
   test('상품 개수를 차감할 수 있다.', () => {
     coke.decrease(2);
-    expect(coke.getInfo().quantity).toBe(8);
+
+    const { quantity } = coke.getInfo();
+
+    expect(quantity).toBe(8);
   });
 
   test('구매 수량이 재고 수량을 초과하면 예외를 발생시킨다.', () => {
@@ -38,5 +58,11 @@ describe('상품 테스트', () => {
     };
 
     expect(coke.getInfo()).toEqual(updatedInfo);
+  });
+
+  test('상품의 프로모션 기간이 유효한지 판단할 수 있다.', () => {
+    const promotionValid = coke.isValidPromotion();
+
+    expect(promotionValid).toBeTruthy();
   });
 });
