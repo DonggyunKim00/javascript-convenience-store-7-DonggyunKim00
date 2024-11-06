@@ -5,6 +5,10 @@ class Product {
     this.#productInfo = productInfo;
   }
 
+  static create([name, price, quantity, promotion]) {
+    return new Product({ name, price, quantity, promotion });
+  }
+
   getInfo() {
     return this.#productInfo;
   }

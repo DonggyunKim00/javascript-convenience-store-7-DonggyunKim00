@@ -1,17 +1,16 @@
 import Product from '../src/model/Product.js';
 
 describe('상품 테스트', () => {
-  let productInfo;
+  const productInfo = {
+    name: '콜라',
+    price: 1000,
+    quantity: 10,
+    promotion: '탄산2+1',
+  };
   let coke;
 
   beforeEach(() => {
-    productInfo = {
-      name: '콜라',
-      price: 1000,
-      quantity: 10,
-      promotion: '탄산2+1',
-    };
-    coke = new Product(productInfo);
+    coke = Product.create(['콜라', 1000, 10, '탄산2+1']);
   });
 
   test('상품을 생성할 수 있다.', () => {
