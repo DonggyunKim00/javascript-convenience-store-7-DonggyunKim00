@@ -20,6 +20,10 @@ const OutputView = {
 
     Console.print(this.OUTPUT_MESSAGE.PRODUCT_INFO(name, price, stringQuantity, promotionName));
   },
+
+  printError(message) {
+    Console.print(`[ERROR] ${message}`);
+  },
 };
 
 export default OutputView;
