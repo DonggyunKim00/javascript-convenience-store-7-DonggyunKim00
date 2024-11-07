@@ -24,10 +24,10 @@ class Product {
   }
 
   isValidPromotion() {
-    const { endDate } = this.#productInfo.promotion;
+    const { startDate, endDate } = this.#productInfo.promotion;
     const now = DateTimes.now();
 
-    return new Date(endDate) > new Date(now);
+    return new Date(startDate) < new Date(now) && new Date(endDate) > new Date(now);
   }
 }
 
