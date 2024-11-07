@@ -9,6 +9,8 @@ class App {
 
   async run() {
     this.#storeController.init();
+    this.#storeController.displayStoreStock();
+    await this.#storeController.purchaseProcess();
   }
 }
 
