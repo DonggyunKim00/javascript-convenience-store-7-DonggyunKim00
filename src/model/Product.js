@@ -8,7 +8,7 @@ class Product {
   }
 
   static create([name, price, quantity, promotion]) {
-    return new Product({ name, price, quantity, promotion });
+    return new Product({ name, price: Number(price), quantity: Number(quantity), promotion });
   }
 
   getInfo() {
