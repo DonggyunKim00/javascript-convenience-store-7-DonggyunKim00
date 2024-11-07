@@ -27,4 +27,10 @@ describe('프로모션 테스트', () => {
       endDate: '2024-12-31',
     });
   });
+
+  test('해당되는 프로모션 정보가 없다면 null을 반환한다.', () => {
+    const promotion = promotionList.findPromotionByName('123123123');
+
+    expect(promotion).toEqual(null);
+  });
 });

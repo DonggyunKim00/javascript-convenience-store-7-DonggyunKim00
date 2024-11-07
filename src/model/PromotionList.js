@@ -17,7 +17,12 @@ class PromotionList {
   }
 
   findPromotionByName(promotionName) {
-    return this.#promotionList.find((promotion) => promotion.name === promotionName);
+    const promotion = this.#promotionList.find(
+      (promotionInfo) => promotionInfo.name === promotionName,
+    );
+
+    if (!promotion) return null;
+    return promotion;
   }
 }
 
