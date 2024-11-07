@@ -20,8 +20,27 @@ class Stock {
     const product = this.#products.find((item) => item.getInfo().name === name);
 
     if (!product) throw new Error('[ERROR]');
-
     return product;
+  }
+
+  canDecreaseQuantityInStock(name, quantity) {
+    const totalQuantity = this.#filterProductsInStock(name)
+      .map((product) => product.getInfo().quantity)
+      .reduce((acc, cur) => acc + cur, 0);
+
+    if (totalQuantity < quantity) return false;
+    return true;
+  }
+
+  hasProductNameInStock(name) {
+    const matchProducts = this.#filterProductsInStock(name);
+
+    if (!matchProducts.length) return false;
+    return true;
+  }
+
+  #filterProductsInStock(name) {
+    return this.#products.filter((item) => item.getInfo().name === name);
   }
 }
 

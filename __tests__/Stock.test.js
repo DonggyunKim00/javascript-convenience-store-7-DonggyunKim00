@@ -45,4 +45,34 @@ describe('재고 테스트', () => {
 
     expect(() => stock.decreaseProducts(confirmProductsInfo)).toThrow('[ERROR]');
   });
+
+  test.each(['베지밀', '면도기', '칫솔'])('%s 은(는) 재고에 존재한다.', (name) => {
+    expect(stock.hasProductNameInStock(name)).toBe(true);
+  });
+
+  test.each(['동균', '김동균', '프로틴주스'])('%s 은(는) 재고에 존재하지 않는다.', (name) => {
+    expect(stock.hasProductNameInStock(name)).toBe(false);
+  });
+
+  test.each([
+    { name: '베지밀', quantity: 20 },
+    { name: '면도기', quantity: 10 },
+    { name: '칫솔', quantity: 10 },
+  ])(
+    '$name의 총 재고 수량이 $quantity 보다 적기 때문에 수량을 차감할 수 없다.',
+    ({ name, quantity }) => {
+      expect(stock.canDecreaseQuantityInStock(name, quantity)).toBe(false);
+    },
+  );
+
+  test.each([
+    { name: '베지밀', quantity: 4 },
+    { name: '면도기', quantity: 5 },
+    { name: '칫솔', quantity: 1 },
+  ])(
+    '$name의 총 재고 수량이 $quantity 보다 적지 않기 때문에 수량을 차감할 수 있다.',
+    ({ name, quantity }) => {
+      expect(stock.canDecreaseQuantityInStock(name, quantity)).toBe(true);
+    },
+  );
 });
