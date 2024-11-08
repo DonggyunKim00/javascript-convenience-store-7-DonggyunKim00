@@ -24,22 +24,18 @@ class Stock {
   }
 
   canDecreaseQuantityInStock(name, quantity) {
-    const totalQuantity = this.#filterProductsInStock(name)
+    const totalQuantity = this.getProductsInStockByName(name)
       .map((product) => product.getInfo().quantity)
       .reduce((acc, cur) => acc + cur, 0);
 
-    if (totalQuantity < quantity) return false;
-    return true;
+    return totalQuantity >= quantity;
   }
 
   hasProductNameInStock(name) {
-    const matchProducts = this.#filterProductsInStock(name);
-
-    if (!matchProducts.length) return false;
-    return true;
+    return this.getProductsInStockByName(name).length > 0;
   }
 
-  #filterProductsInStock(name) {
+  getProductsInStockByName(name) {
     return this.#products.filter((item) => item.getInfo().name === name);
   }
 }

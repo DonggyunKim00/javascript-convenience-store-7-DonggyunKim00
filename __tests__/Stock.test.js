@@ -10,7 +10,6 @@ describe('재고 테스트', () => {
       new Product({ name: '면도기', price: 5000, quantity: 5, promotion: null }),
       new Product({ name: '칫솔', price: 3000, quantity: 2, promotion: null }),
     ];
-
     stock = new Stock(products);
   });
 
@@ -66,13 +65,30 @@ describe('재고 테스트', () => {
   );
 
   test.each([
-    { name: '베지밀', quantity: 4 },
-    { name: '면도기', quantity: 5 },
-    { name: '칫솔', quantity: 1 },
+    { name: '베지밀', quantity: 9 },
+    { name: '면도기', quantity: 4 },
+    { name: '칫솔', quantity: 2 },
   ])(
-    '$name의 총 재고 수량이 $quantity 보다 적지 않기 때문에 수량을 차감할 수 있다.',
+    '$name의 총 재고 수량이 $quantity 보다 크거나 같다면 수량을 차감할 수 있다.',
     ({ name, quantity }) => {
       expect(stock.canDecreaseQuantityInStock(name, quantity)).toBe(true);
     },
   );
+
+  test.each([
+    {
+      name: '베지밀',
+      answer: [new Product({ name: '베지밀', price: 1000, quantity: 9, promotion: '1+1' })],
+    },
+    {
+      name: '면도기',
+      answer: [new Product({ name: '면도기', price: 5000, quantity: 5, promotion: null })],
+    },
+    {
+      name: '칫솔',
+      answer: [new Product({ name: '칫솔', price: 3000, quantity: 2, promotion: null })],
+    },
+  ])('상품의 이름을 통해 재고를 조회할 수 있다.', ({ name, answer }) => {
+    expect(stock.getProductsInStockByName(name)).toEqual(answer);
+  });
 });
