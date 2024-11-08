@@ -43,13 +43,14 @@ class StoreController {
 
   async purchaseProcess() {
     await this.#createPosMachine();
+    this.displayRecipt();
   }
 
   async #createPosMachine() {
     try {
       const orders = await InputView.readOrders();
       this.#validateOrderProcess(orders);
-      this.#posMachine = new PosMachine(parseOrderInput(orders));
+      this.#posMachine = new PosMachine(parseOrderInput(orders), this.#stock);
     } catch (error) {
       OutputView.printError(error.message);
       await this.#createPosMachine();
@@ -63,6 +64,12 @@ class StoreController {
       const isExceedQuantity = this.#stock.canDecreaseQuantityInStock(name, quantity);
       validateOrderData(hasProduct, isExceedQuantity);
     });
+  }
+
+  displayRecipt() {
+    OutputView.printOrders(this.#posMachine.getOrderInfo());
+    OutputView.printPresent();
+    OutputView.printCalculate();
   }
 }
 
