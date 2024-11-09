@@ -40,7 +40,7 @@ class PosMachine {
     return this.#orderList.reduce((acc, [name, amount]) => {
       const { info } = this.#findProductsNotHasPromotion(name);
       if (!info) return acc;
-      acc.push({ product: info, orderAmount: amount });
+      acc.push({ product: info, orderAmount: amount, presentAmount: 0 });
       return acc;
     }, []);
   }

@@ -92,6 +92,7 @@ describe('포스기 테스트', () => {
       {
         product: { name: '소고기', price: 10000, quantity: 3, promotion: null },
         orderAmount: 3,
+        presentAmount: 0,
       },
     ];
     expect(posMachine.checkOrderAboutGeneralProduct()).toEqual(answer);
