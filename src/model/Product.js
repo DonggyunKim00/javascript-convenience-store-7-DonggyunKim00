@@ -16,18 +16,19 @@ class Product {
   }
 
   decrease(count) {
-    if (count > this.#productInfo.quantity) {
-      throw new Error('[ERROR]');
-    }
-
     this.#productInfo.quantity -= count;
   }
 
   isValidPromotion() {
+    if (!this.#productInfo.promotion) return false;
     const { startDate, endDate } = this.#productInfo.promotion;
     const now = DateTimes.now();
 
     return new Date(startDate) < new Date(now) && new Date(endDate) > new Date(now);
+  }
+
+  hasPromotion() {
+    return !!this.#productInfo.promotion;
   }
 }
 

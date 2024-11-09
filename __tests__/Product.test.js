@@ -46,10 +46,6 @@ describe('상품 테스트', () => {
     expect(quantity).toBe(8);
   });
 
-  test('구매 수량이 재고 수량을 초과하면 예외를 발생시킨다.', () => {
-    expect(() => coke.decrease(100)).toThrow('[ERROR]');
-  });
-
   test('상품 개수가 변경되었을 때 최신 정보를 조회할 수 있다.', () => {
     coke.decrease(10);
     const updatedInfo = {
@@ -64,5 +60,9 @@ describe('상품 테스트', () => {
     const promotionValid = coke.isValidPromotion();
 
     expect(promotionValid).toBeTruthy();
+  });
+
+  test('상품에 프로모션이 존재하는지 확인할 수 있다.', () => {
+    expect(coke.hasPromotion()).toBe(true);
   });
 });
