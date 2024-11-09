@@ -4,6 +4,7 @@ class Receipt {
   #hasMembership;
 
   #initPayInfo = {
+    totalOrderCount: 0,
     shoppingTotalPrice: 0,
     promotionDiscount: 0,
     membershipDiscount: 0,
@@ -31,7 +32,7 @@ class Receipt {
     }, []);
   }
 
-  getMoneyInfo() {
+  getPayInfo() {
     return this.#shoppingList.reduce(
       (acc, { product, orderAmount, presentAmount }) =>
         this.#moneyInfoCalculate(acc, product, orderAmount, presentAmount),
@@ -40,6 +41,7 @@ class Receipt {
   }
 
   #moneyInfoCalculate(acc, product, orderAmount, presentAmount) {
+    acc.totalOrderCount += orderAmount;
     acc.shoppingTotalPrice += product.price * orderAmount;
     acc.promotionDiscount += product.price * presentAmount;
     if (this.#hasMembership && !presentAmount) {

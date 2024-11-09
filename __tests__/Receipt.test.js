@@ -58,6 +58,7 @@ describe('영수증 테스트', () => {
     {
       hasMembership: true,
       answer: {
+        totalOrderCount: 24,
         shoppingTotalPrice: 27500,
         promotionDiscount: 6500,
         membershipDiscount: 750,
@@ -67,6 +68,7 @@ describe('영수증 테스트', () => {
     {
       hasMembership: false,
       answer: {
+        totalOrderCount: 24,
         shoppingTotalPrice: 27500,
         promotionDiscount: 6500,
         membershipDiscount: 0,
@@ -78,7 +80,7 @@ describe('영수증 테스트', () => {
     ({ hasMembership, answer }) => {
       const receipt = new Receipt(shoppingList, hasMembership);
 
-      expect(receipt.getMoneyInfo()).toEqual(answer);
+      expect(receipt.getPayInfo()).toEqual(answer);
     },
   );
 
@@ -103,6 +105,6 @@ describe('영수증 테스트', () => {
 
     const receipt = new Receipt(newShoppingList, hasMembership);
 
-    expect(receipt.getMoneyInfo().membershipDiscount).toBe(8000);
+    expect(receipt.getPayInfo().membershipDiscount).toBe(8000);
   });
 });
