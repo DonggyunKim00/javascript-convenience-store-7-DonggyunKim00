@@ -45,6 +45,7 @@ class StoreController {
   async purchaseProcess() {
     await this.#createPosMachine();
     const shoppingList = await this.#checkOrderForPromotion();
+    this.#posMachine.decreaseStock(shoppingList);
   }
 
   async #createPosMachine() {

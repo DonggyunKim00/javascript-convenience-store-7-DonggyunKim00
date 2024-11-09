@@ -51,6 +51,25 @@ class PosMachine {
     if (products[0].hasPromotion()) return { info: null };
     return { info: products[0].getInfo() };
   }
+
+  decreaseStock(shoppingList) {
+    shoppingList
+      .map(({ product, orderAmount }) => this.#makeNewShoppingList(product, orderAmount))
+      .flat()
+      .forEach(([product, decreaseNum]) => {
+        product.decrease(decreaseNum);
+      });
+  }
+
+  #makeNewShoppingList(product, orderAmount) {
+    const products = this.#stock.getProductsInStockByName(product.name);
+    if (products.length > 1)
+      return products.map((item) => {
+        if (item.hasPromotion()) return [item, Math.min(product.quantity, orderAmount)];
+        return [item, orderAmount - Math.min(product.quantity, orderAmount)];
+      });
+    return products.map((item) => [item, orderAmount]);
+  }
 }
 
 export default PosMachine;

@@ -5,35 +5,36 @@ import Stock from '../src/model/Stock';
 describe('포스기 테스트', () => {
   let posMachine;
 
+  const stock = new Stock([
+    new Product({
+      name: '프로틴바',
+      price: 1000,
+      quantity: 5,
+      promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
+    }),
+    new Product({ name: '소고기', price: 10000, quantity: 3, promotion: null }),
+    new Product({ name: '돼지고기', price: 3000, quantity: 2, promotion: null }),
+    new Product({
+      name: '돼지고기',
+      price: 3000,
+      quantity: 2,
+      promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
+    }),
+    new Product({
+      name: '맥북',
+      price: 2000000,
+      quantity: 10,
+      promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
+    }),
+    new Product({ name: '맥북', price: 2000000, quantity: 10, promotion: null }),
+  ]);
+
   beforeEach(() => {
     const orders = [
       ['프로틴바', 2],
       ['소고기', 3],
-      ['맥북', 3],
+      ['맥북', 12],
     ];
-    const stock = new Stock([
-      new Product({
-        name: '프로틴바',
-        price: 1000,
-        quantity: 5,
-        promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
-      }),
-      new Product({ name: '소고기', price: 10000, quantity: 3, promotion: null }),
-      new Product({ name: '돼지고기', price: 3000, quantity: 2, promotion: null }),
-      new Product({
-        name: '돼지고기',
-        price: 3000,
-        quantity: 2,
-        promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
-      }),
-      new Product({
-        name: '맥북',
-        price: 2000000,
-        quantity: 10,
-        promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
-      }),
-      new Product({ name: '맥북', price: 2000000, quantity: 10, promotion: null }),
-    ]);
     posMachine = new PosMachine(orders, stock);
   });
 
@@ -51,8 +52,8 @@ describe('포스기 테스트', () => {
       },
       {
         name: '맥북',
-        quantity: 3,
-        totalPrice: 6000000,
+        quantity: 12,
+        totalPrice: 24000000,
       },
     ];
     expect(posMachine.getOrderInfo()).toEqual(answer);
@@ -78,8 +79,8 @@ describe('포스기 테스트', () => {
           quantity: 10,
           promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
         },
-        quantity: 3,
-        amount: 3,
+        quantity: 10,
+        amount: 12,
         isPromotionValid: true,
       },
     ];
@@ -94,5 +95,48 @@ describe('포스기 테스트', () => {
       },
     ];
     expect(posMachine.checkOrderAboutGeneralProduct()).toEqual(answer);
+  });
+
+  test('주문 항목의 재고가 올바르게 감소해야 한다.', () => {
+    const shoppingList = [
+      {
+        product: {
+          name: '프로틴바',
+          quantity: 5,
+          promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
+        },
+        orderAmount: 2,
+      },
+      { product: { name: '소고기', quantity: 3, promotion: null }, orderAmount: 3 },
+      {
+        product: {
+          name: '맥북',
+          quantity: 10,
+          promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
+        },
+        orderAmount: 12,
+      },
+    ];
+
+    posMachine.decreaseStock(shoppingList);
+
+    expect(stock.getProductsInfo()).toEqual(
+      expect.arrayContaining([
+        {
+          name: '프로틴바',
+          price: 1000,
+          quantity: 3,
+          promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
+        },
+        { name: '소고기', price: 10000, quantity: 0, promotion: null },
+        {
+          name: '맥북',
+          price: 2000000,
+          quantity: 0,
+          promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
+        },
+        { name: '맥북', price: 2000000, quantity: 8, promotion: null },
+      ]),
+    );
   });
 });
