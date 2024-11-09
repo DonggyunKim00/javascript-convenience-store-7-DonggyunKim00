@@ -7,6 +7,7 @@ import InputView from '../view/InputView.js';
 import { validateOrderInput, validateOrderData } from '../utils/validate.js';
 import PosMachine from '../model/PosMachine.js';
 import { parseOrderInput } from '../utils/parse.js';
+import PromotionService from '../service/PromotionService.js';
 
 class StoreController {
   #promotionList;
@@ -43,7 +44,7 @@ class StoreController {
 
   async purchaseProcess() {
     await this.#createPosMachine();
-    this.displayRecipt();
+    const shoppingList = await this.#checkOrderForPromotion();
   }
 
   async #createPosMachine() {
@@ -64,6 +65,16 @@ class StoreController {
       const isExceedQuantity = this.#stock.canDecreaseQuantityInStock(name, quantity);
       validateOrderData(hasProduct, isExceedQuantity);
     });
+  }
+
+  async #checkOrderForPromotion() {
+    const promotionExistProducts = this.#posMachine.checkOrderAboutPromotionProduct();
+    const nonePromotionProduct = this.#posMachine.checkOrderAboutGeneralProduct();
+    const result = [];
+    for (let i = 0; i < promotionExistProducts.length; i += 1)
+      await PromotionService.promotionInputSystem(promotionExistProducts[i], result);
+    for (let i = 0; i < nonePromotionProduct.length; i += 1) result.push(nonePromotionProduct[i]);
+    return result;
   }
 
   displayRecipt() {

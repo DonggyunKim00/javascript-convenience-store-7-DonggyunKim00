@@ -3,8 +3,6 @@ class PosMachine {
 
   #stock;
 
-  #membership;
-
   constructor(orders, stock) {
     this.#orderList = orders;
     this.#stock = stock;
@@ -14,8 +12,44 @@ class PosMachine {
     return this.#orderList.map(([name, quantity]) => ({
       name,
       quantity,
-      totalPrice: this.#stock.getProductsInStockByName(name)[0].getInfo().price * quantity,
+      totalPrice: this.#getOrderProductsStock(name)[0].getInfo().price * quantity,
     }));
+  }
+
+  #getOrderProductsStock(name) {
+    return this.#stock.getProductsInStockByName(name);
+  }
+
+  checkOrderAboutPromotionProduct() {
+    return this.#orderList.reduce((acc, [name, amount]) => {
+      const { info, isPromotionValid } = this.#findProductsHasPromotion(name);
+      if (!info) return acc;
+      const quantity = Math.min(info.quantity, amount);
+      acc.push({ info, quantity, amount, isPromotionValid });
+      return acc;
+    }, []);
+  }
+
+  #findProductsHasPromotion(name) {
+    const product = this.#getOrderProductsStock(name).find((item) => item.hasPromotion());
+    if (!product) return { info: null, isPromotionValid: null };
+    return { info: product.getInfo(), isPromotionValid: product.isValidPromotion() };
+  }
+
+  checkOrderAboutGeneralProduct() {
+    return this.#orderList.reduce((acc, [name, amount]) => {
+      const { info } = this.#findProductsNotHasPromotion(name);
+      if (!info) return acc;
+      acc.push({ product: info, orderAmount: amount });
+      return acc;
+    }, []);
+  }
+
+  #findProductsNotHasPromotion(name) {
+    const products = this.#getOrderProductsStock(name);
+    if (products.length > 1) return { info: null };
+    if (products[0].hasPromotion()) return { info: null };
+    return { info: products[0].getInfo() };
   }
 }
 
