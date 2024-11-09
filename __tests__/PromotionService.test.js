@@ -73,8 +73,8 @@ describe('프로모션 서비스 테스트', () => {
       inputs: ['Y'],
       answer: {
         product: { name: '오렌지주스', price: 1800, quantity: 9, promotion: { buy: 1, get: 1 } },
-        orderAmount: 2,
-        presentAmount: 1,
+        orderAmount: 8,
+        presentAmount: 4,
       },
     },
     {
@@ -85,8 +85,32 @@ describe('프로모션 서비스 테스트', () => {
       inputs: ['N'],
       answer: {
         product: { name: '오렌지주스', price: 1800, quantity: 9, promotion: { buy: 1, get: 1 } },
-        orderAmount: 1,
-        presentAmount: 0,
+        orderAmount: 3,
+        presentAmount: 1,
+      },
+    },
+    {
+      info: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+      quantity: 3,
+      amount: 3,
+      isPromotionValid: true,
+      inputs: ['Y'],
+      answer: {
+        product: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+        orderAmount: 4,
+        presentAmount: 2,
+      },
+    },
+    {
+      info: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+      quantity: 3,
+      amount: 3,
+      isPromotionValid: true,
+      inputs: ['N'],
+      answer: {
+        product: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+        orderAmount: 3,
+        presentAmount: 1,
       },
     },
   ])(
