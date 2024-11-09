@@ -8,14 +8,6 @@ class PosMachine {
     this.#stock = stock;
   }
 
-  getOrderInfo() {
-    return this.#orderList.map(([name, quantity]) => ({
-      name,
-      quantity,
-      totalPrice: this.#getOrderProductsStock(name)[0].getInfo().price * quantity,
-    }));
-  }
-
   #getOrderProductsStock(name) {
     return this.#stock.getProductsInStockByName(name);
   }

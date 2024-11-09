@@ -89,7 +89,7 @@ class StoreController {
   }
 
   displayRecipt() {
-    OutputView.printOrders(this.#posMachine.getOrderInfo());
+    OutputView.printOrders();
     OutputView.printPresent();
     OutputView.printCalculate();
   }

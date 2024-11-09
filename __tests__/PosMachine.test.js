@@ -38,27 +38,6 @@ describe('포스기 테스트', () => {
     posMachine = new PosMachine(orders, stock);
   });
 
-  test('주문한 상품의 이름,수량,금액을 조회할 수 있다.', () => {
-    const answer = [
-      {
-        name: '프로틴바',
-        quantity: 2,
-        totalPrice: 2000,
-      },
-      {
-        name: '소고기',
-        quantity: 3,
-        totalPrice: 30000,
-      },
-      {
-        name: '맥북',
-        quantity: 12,
-        totalPrice: 24000000,
-      },
-    ];
-    expect(posMachine.getOrderInfo()).toEqual(answer);
-  });
-
   test('주문 항목에 대해 프로모션이 적용 가능한 제품 정보를 재고에서 찾아 정리할 수 있다.', () => {
     const answer = [
       {

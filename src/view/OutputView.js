@@ -15,6 +15,13 @@ const OutputView = {
 
       return `${namePadded}${quantityPadded}${pricePadded}`;
     },
+    PRESENT_PRODUCT: (name, quantity) => {
+      const namePadded = name + ' '.repeat(17 - getTextLength(name));
+      const quantityPadded =
+        quantity.toString() + ' '.repeat(8 - getTextLength(quantity.toString()));
+
+      return `${namePadded}${quantityPadded}`;
+    },
     STORE_PRESENT: '===========증    정=============',
     SEPERATOR: '================================',
   }),
@@ -46,6 +53,7 @@ const OutputView = {
 
   printPresent() {
     Console.print(this.OUTPUT_MESSAGE.STORE_PRESENT);
+    Console.print(this.OUTPUT_MESSAGE.PRESENT_PRODUCT('사이다', 1));
   },
 
   printCalculate() {
