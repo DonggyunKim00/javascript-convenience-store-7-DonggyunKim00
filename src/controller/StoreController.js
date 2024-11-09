@@ -8,6 +8,8 @@ import { validateOrderInput, validateOrderData } from '../utils/validate.js';
 import PosMachine from '../model/PosMachine.js';
 import { parseOrderInput } from '../utils/parse.js';
 import PromotionService from '../service/PromotionService.js';
+import { readAndValidateMembership } from '../utils/readInput.js';
+import Receipt from '../model/Receipt.js';
 
 class StoreController {
   #promotionList;
@@ -15,6 +17,8 @@ class StoreController {
   #stock;
 
   #posMachine;
+
+  #receipt;
 
   init() {
     this.#initCreatePromotionList();
@@ -46,6 +50,7 @@ class StoreController {
     await this.#createPosMachine();
     const shoppingList = await this.#checkOrderForPromotion();
     this.#posMachine.decreaseStock(shoppingList);
+    await this.#createReceipt(shoppingList);
   }
 
   async #createPosMachine() {
@@ -76,6 +81,11 @@ class StoreController {
       await PromotionService.promotionInputSystem(promotionExistProducts[i], result);
     for (let i = 0; i < nonePromotionProduct.length; i += 1) result.push(nonePromotionProduct[i]);
     return result;
+  }
+
+  async #createReceipt(shoppingList) {
+    const hasMembership = (await readAndValidateMembership()) === 'Y';
+    this.#receipt = new Receipt(shoppingList, hasMembership);
   }
 
   displayRecipt() {
