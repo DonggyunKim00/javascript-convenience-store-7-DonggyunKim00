@@ -66,10 +66,12 @@ const OutputView = {
   },
 
   printPresent(presentList) {
-    Console.print(this.OUTPUT_MESSAGE.STORE_PRESENT);
-    presentList.forEach(({ name, quantity }) => {
-      Console.print(this.OUTPUT_MESSAGE.PRESENT_PRODUCT(name, quantity));
-    });
+    if (presentList.length) {
+      Console.print(this.OUTPUT_MESSAGE.STORE_PRESENT);
+      presentList.forEach(({ name, quantity }) => {
+        Console.print(this.OUTPUT_MESSAGE.PRESENT_PRODUCT(name, quantity));
+      });
+    }
   },
 
   printPayInfo(payInfo) {
