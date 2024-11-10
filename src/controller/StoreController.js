@@ -99,7 +99,6 @@ class StoreController {
     OutputView.printOrders(this.#receipt.getShoppingList());
     OutputView.printPresent(this.#receipt.getPresentList());
     OutputView.printPayInfo(this.#receipt.getPayInfo());
-    OutputView.printBlankLine();
   }
 }
 

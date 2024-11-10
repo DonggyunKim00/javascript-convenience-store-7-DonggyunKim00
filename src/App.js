@@ -1,5 +1,6 @@
 import StoreController from './controller/StoreController.js';
 import { readAndValidateShopping } from './utils/readInput.js';
+import OutputView from './view/OutputView.js';
 
 class App {
   #storeController;
@@ -17,6 +18,7 @@ class App {
     while (true) {
       await this.#storeController.play();
       const input = await readAndValidateShopping();
+      if (input === 'Y') OutputView.printBlankLine();
       if (input === 'N') break;
     }
   }
