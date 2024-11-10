@@ -31,7 +31,6 @@ describe('프로모션 서비스 테스트', () => {
       quantity: 3,
       amount: 3,
       isPromotionValid: false,
-      inputs: ['Y'],
       answer: {
         product: { name: '프로틴쉐이크', price: 3500, quantity: 4, promotion: { buy: 1, get: 1 } },
         orderAmount: 3,
@@ -39,22 +38,19 @@ describe('프로모션 서비스 테스트', () => {
       },
     },
     {
-      info: { name: '프로틴쉐이크', price: 3500, quantity: 4, promotion: { buy: 1, get: 1 } },
-      quantity: 3,
-      amount: 3,
+      info: { name: '맥북M4', price: 3000000, quantity: 4, promotion: { buy: 1, get: 1 } },
+      quantity: 2,
+      amount: 2,
       isPromotionValid: false,
-      inputs: ['N'],
       answer: {
-        product: { name: '프로틴쉐이크', price: 3500, quantity: 4, promotion: { buy: 1, get: 1 } },
-        orderAmount: 0,
+        product: { name: '맥북M4', price: 3000000, quantity: 4, promotion: { buy: 1, get: 1 } },
+        orderAmount: 2,
         presentAmount: 0,
       },
     },
   ])(
-    '유효하지 않은 프로모션을 그대로 결제할지 결정할 수 있다.',
-    async ({ info, quantity, amount, isPromotionValid, inputs, answer }) => {
-      mockQuestions(inputs);
-
+    '유효하지 않은 프로모션을 가진 상품은 일반 상품과 동일한 처리를 할 수 있다.',
+    async ({ info, quantity, amount, isPromotionValid, answer }) => {
       await PromotionService.promotionInputSystem(
         { info, quantity, amount, isPromotionValid },
         result,

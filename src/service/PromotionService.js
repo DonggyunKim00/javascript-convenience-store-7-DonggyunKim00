@@ -12,10 +12,7 @@ class PromotionService {
   }
 
   static async #whenInvalidPromotion(product, amount, result) {
-    const answer = await readAndValidatePurchase(product.name, amount);
-    let orderAmount = amount;
-    if (answer === 'N') orderAmount = 0;
-    await result.push({ product, orderAmount, presentAmount: 0 });
+    await result.push({ product, orderAmount: amount, presentAmount: 0 });
   }
 
   static async #whenBuyOnePlusOne(product, quantity, amount, result) {
