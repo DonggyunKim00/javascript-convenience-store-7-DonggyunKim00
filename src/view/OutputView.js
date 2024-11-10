@@ -11,9 +11,8 @@ const OutputView = {
       const namePadded = name + ' '.repeat(17 - getTextLength(name));
       const quantityPadded =
         quantity.toString() + ' '.repeat(8 - getTextLength(quantity.toString()));
-      const pricePadded = price.toString().toLocaleString('ko-KR');
 
-      return `${namePadded}${quantityPadded}${pricePadded}`;
+      return `${namePadded}${quantityPadded}${price}`;
     },
     PRESENT_PRODUCT: (name, quantity) => {
       const namePadded = name + ' '.repeat(17 - getTextLength(name));
@@ -24,7 +23,20 @@ const OutputView = {
     },
     STORE_PRESENT: '===========증    정=============',
     SEPERATOR: '================================',
+    PAY_INFO: (type, name, price, quantity = '') => {
+      const namePadded = name + ' '.repeat(17 - getTextLength(name));
+      const quantityPadded =
+        quantity.toString() + ' '.repeat(8 - getTextLength(quantity.toString()));
+      let newPrice = price;
+      if (type === 'minus') newPrice = `-${price}`;
+
+      return `${namePadded}${quantityPadded}${newPrice}`;
+    },
   }),
+
+  printBlankLine() {
+    Console.print('');
+  },
 
   printIntro() {
     Console.print(this.OUTPUT_MESSAGE.WELCOME_INTRO);
@@ -47,17 +59,58 @@ const OutputView = {
   printOrders(orders) {
     Console.print(this.OUTPUT_MESSAGE.STORE_NAME);
     orders.forEach(({ name, quantity, totalPrice }) => {
-      Console.print(this.OUTPUT_MESSAGE.ORDER_PRODUCT(name, quantity, totalPrice));
+      Console.print(
+        this.OUTPUT_MESSAGE.ORDER_PRODUCT(name, quantity, totalPrice.toLocaleString('ko-KR')),
+      );
     });
   },
 
-  printPresent() {
+  printPresent(presentList) {
     Console.print(this.OUTPUT_MESSAGE.STORE_PRESENT);
-    Console.print(this.OUTPUT_MESSAGE.PRESENT_PRODUCT('사이다', 1));
+    presentList.forEach(({ name, quantity }) => {
+      Console.print(this.OUTPUT_MESSAGE.PRESENT_PRODUCT(name, quantity));
+    });
   },
 
-  printCalculate() {
+  printPayInfo(payInfo) {
+    const { totalOrderCount, shoppingTotalPrice, promotionDiscount, membershipDiscount, totalPay } =
+      payInfo;
     Console.print(this.OUTPUT_MESSAGE.SEPERATOR);
+    this.printTotalPrice(shoppingTotalPrice, totalOrderCount);
+    this.printPromotionDiscount(promotionDiscount);
+    this.printMembershipDiscount(membershipDiscount);
+    this.printTotalPay(totalPay);
+  },
+
+  printTotalPrice(shoppingTotalPrice, totalOrderCount) {
+    Console.print(
+      this.OUTPUT_MESSAGE.PAY_INFO(
+        'plus',
+        '총구매액',
+        shoppingTotalPrice.toLocaleString('ko-KR'),
+        totalOrderCount,
+      ),
+    );
+  },
+
+  printPromotionDiscount(promotionDiscount) {
+    Console.print(
+      this.OUTPUT_MESSAGE.PAY_INFO('minus', '행사할인', promotionDiscount.toLocaleString('ko-KR')),
+    );
+  },
+
+  printMembershipDiscount(membershipDiscount) {
+    Console.print(
+      this.OUTPUT_MESSAGE.PAY_INFO(
+        'minus',
+        '멤버십할인',
+        membershipDiscount.toLocaleString('ko-KR'),
+      ),
+    );
+  },
+
+  printTotalPay(totalPay) {
+    Console.print(this.OUTPUT_MESSAGE.PAY_INFO('plus', '내실돈', totalPay.toLocaleString('ko-KR')));
   },
 };
 

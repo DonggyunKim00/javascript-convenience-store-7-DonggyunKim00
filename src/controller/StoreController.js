@@ -51,6 +51,7 @@ class StoreController {
     const shoppingList = await this.#checkOrderForPromotion();
     this.#posMachine.decreaseStock(shoppingList);
     await this.#createReceipt(shoppingList);
+    this.displayRecipt();
   }
 
   async #createPosMachine() {
@@ -89,9 +90,9 @@ class StoreController {
   }
 
   displayRecipt() {
-    OutputView.printOrders();
-    OutputView.printPresent();
-    OutputView.printCalculate();
+    OutputView.printOrders(this.#receipt.getShoppingList());
+    OutputView.printPresent(this.#receipt.getPresentList());
+    OutputView.printPayInfo(this.#receipt.getPayInfo());
   }
 }
 
