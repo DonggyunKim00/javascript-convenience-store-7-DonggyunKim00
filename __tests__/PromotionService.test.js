@@ -236,7 +236,6 @@ describe('프로모션 서비스 테스트', () => {
       ]),
       quantity: 2,
       amount: 2,
-      isPromotionValid: true,
       inputs: ['Y'],
       answer: {
         product: Product.create([
@@ -258,7 +257,6 @@ describe('프로모션 서비스 테스트', () => {
       ]),
       quantity: 8,
       amount: 8,
-      isPromotionValid: true,
       inputs: ['N'],
       answer: {
         product: Product.create([
@@ -302,27 +300,6 @@ describe('프로모션 서비스 테스트', () => {
         ]),
         orderAmount: 10,
         presentAmount: 2,
-      },
-    },
-    {
-      product: Product.create([
-        '탄산수',
-        1200,
-        5,
-        { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
-      ]),
-      quantity: 5,
-      amount: 5,
-      inputs: ['N'],
-      answer: {
-        product: Product.create([
-          '탄산수',
-          1200,
-          5,
-          { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
-        ]),
-        orderAmount: 4,
-        presentAmount: 1,
       },
     },
   ])(

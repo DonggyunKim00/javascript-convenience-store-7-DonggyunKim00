@@ -26,11 +26,15 @@ class PromotionService {
   }
 
   static async #whenBuyTwoPlusOne(product, quantity, amount, result) {
-    const nonePromotion = amount - quantity + product.getInfo().promotion.get;
-    if (amount >= product.getInfo().quantity)
-      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion, result);
-    if (quantity === amount && amount % 3 === 2)
+    const nonePromotion = amount - quantity;
+    if (product.getInfo().quantity > amount && amount % 3 === 2)
       return await PromotionService.#pushAdditionResult(product, quantity, result);
+    if (product.getInfo().quantity % 3 === 1 && amount > quantity)
+      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion + 1, result);
+    if (product.getInfo().quantity % 3 === 2 && amount > quantity)
+      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion + 2, result);
+    if (product.getInfo().quantity % 3 === 2 && amount === product.getInfo().quantity)
+      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion + 2, result);
     return result.push({ product, orderAmount: amount, presentAmount: Math.floor(quantity / 3) });
   }
 
