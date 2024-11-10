@@ -29,7 +29,7 @@ const validFunction = {
 };
 
 export const validateOrderInput = (input) => {
-  if (validFunction.isEmptyInput(input)) throw new Error(ERROR_MESSAGE.WRONG_INPUT);
+  if (validFunction.isEmptyInput(input)) throw new Error(ERROR_MESSAGE.WRONG_ORDER_FORM);
   if (validFunction.isInvalidFormat(input)) throw new Error(ERROR_MESSAGE.WRONG_ORDER_FORM);
   if (validFunction.hasEmptyField(input)) throw new Error(ERROR_MESSAGE.WRONG_ORDER_FORM);
   if (validFunction.hasDuplicateInput(input)) throw new Error(ERROR_MESSAGE.WRONG_ORDER_FORM);
