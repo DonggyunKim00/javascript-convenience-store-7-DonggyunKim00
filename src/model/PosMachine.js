@@ -65,15 +65,19 @@ class PosMachine {
   }
 
   #makeNewShoppingList(product, orderAmount) {
-    const products = this.#stock
-      .getProductsInStockByName(product.getInfo().name)
-      .filter((item) => item.getInfo().quantity);
+    const products = this.#existQuantityProducts(product);
     if (products.length > 1)
       return products.map((item) => {
         if (item.hasPromotion()) return [item, Math.min(product.getInfo().quantity, orderAmount)];
         return [item, orderAmount - Math.min(product.getInfo().quantity, orderAmount)];
       });
     return products.map((item) => [item, orderAmount]);
+  }
+
+  #existQuantityProducts(product) {
+    return this.#stock
+      .getProductsInStockByName(product.getInfo().name)
+      .filter((item) => item.getInfo().quantity);
   }
 }
 

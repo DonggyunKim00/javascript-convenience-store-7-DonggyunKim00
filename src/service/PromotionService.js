@@ -26,38 +26,33 @@ class PromotionService {
   }
 
   static async #whenBuyTwoPlusOne(product, quantity, amount, result) {
+    const productQuantity = product.getInfo().quantity;
     const nonePromotion = amount - quantity;
-    if (product.getInfo().quantity > amount && amount % 3 === 2)
+    if (productQuantity > amount && amount % 3 === 2)
       return await PromotionService.#pushAdditionResult(product, quantity, result);
-    if (product.getInfo().quantity % 3 === 1 && amount > quantity)
+    if (productQuantity % 3 === 1 && amount > quantity)
       return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion + 1, result);
-    if (product.getInfo().quantity % 3 === 2 && amount > quantity)
-      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion + 2, result);
-    if (product.getInfo().quantity % 3 === 2 && amount === product.getInfo().quantity)
+    if (productQuantity % 3 === 2 && (amount > quantity || amount === productQuantity))
       return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion + 2, result);
     return result.push({ product, orderAmount: amount, presentAmount: Math.floor(quantity / 3) });
   }
 
   static async #pushPurchaseResult(product, amount, nonePromotion, result) {
-    const answer = await readAndValidatePurchase(product.getInfo().name, nonePromotion);
+    const { promotion, quantity, name } = product.getInfo();
     let orderAmount = amount;
-    if (answer === 'N') orderAmount -= nonePromotion;
-    const maxQuantityPerPromotion =
-      product.getInfo().promotion.get + product.getInfo().promotion.buy;
-    const maxPresentAmount = Math.floor(product.getInfo().quantity / maxQuantityPerPromotion);
+    if ((await readAndValidatePurchase(name, nonePromotion)) === 'N') orderAmount -= nonePromotion;
+    const maxPresentAmount = Math.floor(quantity / (promotion.get + promotion.buy));
     const presentAmount = Math.floor(
-      Math.min(maxPresentAmount, orderAmount / maxQuantityPerPromotion),
+      Math.min(maxPresentAmount, orderAmount / (promotion.get + promotion.buy)),
     );
     result.push({ product, orderAmount, presentAmount });
   }
 
   static async #pushAdditionResult(product, quantity, result) {
-    const answer = await readAndValidateFreeAddition(product.getInfo().name);
+    const { promotion, name } = product.getInfo();
     let orderAmount = quantity;
-    if (answer === 'Y') orderAmount += 1;
-    const presentAmount = Math.floor(
-      orderAmount / (product.getInfo().promotion.get + product.getInfo().promotion.buy),
-    );
+    if ((await readAndValidateFreeAddition(name)) === 'Y') orderAmount += 1;
+    const presentAmount = Math.floor(orderAmount / (promotion.get + promotion.buy));
     result.push({ product, orderAmount, presentAmount });
   }
 }
