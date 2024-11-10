@@ -1,5 +1,6 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
 import PromotionService from '../src/service/PromotionService';
+import Product from '../src/model/Product';
 
 const mockQuestions = (inputs) => {
   const messages = [];
@@ -27,34 +28,49 @@ describe('프로모션 서비스 테스트', () => {
 
   test.each([
     {
-      info: { name: '프로틴쉐이크', price: 3500, quantity: 4, promotion: { buy: 1, get: 1 } },
+      product: Product.create([
+        '프로틴쉐이크',
+        3500,
+        4,
+        { startDate: '2021-01-01', endDate: '2021-01-02' },
+      ]),
       quantity: 3,
       amount: 3,
-      isPromotionValid: false,
       answer: {
-        product: { name: '프로틴쉐이크', price: 3500, quantity: 4, promotion: { buy: 1, get: 1 } },
+        product: Product.create([
+          '프로틴쉐이크',
+          3500,
+          4,
+          { startDate: '2021-01-01', endDate: '2021-01-02' },
+        ]),
         orderAmount: 3,
         presentAmount: 0,
       },
     },
     {
-      info: { name: '맥북M4', price: 3000000, quantity: 4, promotion: { buy: 1, get: 1 } },
+      product: Product.create([
+        '맥북M4',
+        3000000,
+        4,
+        { startDate: '2021-01-01', endDate: '2021-01-02' },
+      ]),
       quantity: 2,
       amount: 2,
-      isPromotionValid: false,
       answer: {
-        product: { name: '맥북M4', price: 3000000, quantity: 4, promotion: { buy: 1, get: 1 } },
+        product: Product.create([
+          '맥북M4',
+          3000000,
+          4,
+          { startDate: '2023-11-01', endDate: '2024-10-03' },
+        ]),
         orderAmount: 2,
         presentAmount: 0,
       },
     },
   ])(
     '유효하지 않은 프로모션을 가진 상품은 일반 상품과 동일한 처리를 할 수 있다.',
-    async ({ info, quantity, amount, isPromotionValid, answer }) => {
-      await PromotionService.promotionInputSystem(
-        { info, quantity, amount, isPromotionValid },
-        result,
-      );
+    async ({ product, quantity, amount, answer }) => {
+      await PromotionService.promotionInputSystem({ product, quantity, amount }, result);
 
       expect(result).toEqual([answer]);
     },
@@ -62,62 +78,95 @@ describe('프로모션 서비스 테스트', () => {
 
   test.each([
     {
-      info: { name: '오렌지주스', price: 1800, quantity: 9, promotion: { buy: 1, get: 1 } },
+      product: Product.create([
+        '오렌지주스',
+        1800,
+        9,
+        { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       quantity: 7,
       amount: 7,
-      isPromotionValid: true,
       inputs: ['Y'],
       answer: {
-        product: { name: '오렌지주스', price: 1800, quantity: 9, promotion: { buy: 1, get: 1 } },
+        product: Product.create([
+          '오렌지주스',
+          1800,
+          9,
+          { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 8,
         presentAmount: 4,
       },
     },
     {
-      info: { name: '오렌지주스', price: 1800, quantity: 9, promotion: { buy: 1, get: 1 } },
+      product: Product.create([
+        '오렌지주스',
+        1800,
+        9,
+        { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       quantity: 3,
       amount: 3,
-      isPromotionValid: true,
       inputs: ['N'],
       answer: {
-        product: { name: '오렌지주스', price: 1800, quantity: 9, promotion: { buy: 1, get: 1 } },
+        product: Product.create([
+          '오렌지주스',
+          1800,
+          9,
+          { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 3,
         presentAmount: 1,
       },
     },
     {
-      info: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+      product: Product.create([
+        '감자칩',
+        1500,
+        5,
+        { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       quantity: 3,
       amount: 3,
-      isPromotionValid: true,
       inputs: ['Y'],
       answer: {
-        product: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+        product: Product.create([
+          '감자칩',
+          1500,
+          5,
+          { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 4,
         presentAmount: 2,
       },
     },
     {
-      info: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+      product: Product.create([
+        '감자칩',
+        1500,
+        5,
+        { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       quantity: 3,
       amount: 3,
-      isPromotionValid: true,
       inputs: ['N'],
       answer: {
-        product: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+        product: Product.create([
+          '감자칩',
+          1500,
+          5,
+          { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 3,
         presentAmount: 1,
       },
     },
   ])(
     '1+1 상품에서 무료로 상품을 더 받을지 결정할 수 있다.',
-    async ({ info, quantity, amount, isPromotionValid, inputs, answer }) => {
+    async ({ product, quantity, amount, inputs, answer }) => {
       mockQuestions(inputs);
 
-      await PromotionService.promotionInputSystem(
-        { info, quantity, amount, isPromotionValid },
-        result,
-      );
+      await PromotionService.promotionInputSystem({ product, quantity, amount }, result);
 
       expect(result).toEqual([answer]);
     },
@@ -125,38 +174,53 @@ describe('프로모션 서비스 테스트', () => {
 
   test.each([
     {
-      info: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+      product: Product.create([
+        '감자칩',
+        1500,
+        5,
+        { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       quantity: 5,
       amount: 8,
-      isPromotionValid: true,
       inputs: ['Y'],
       answer: {
-        product: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+        product: Product.create([
+          '감자칩',
+          1500,
+          5,
+          { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 8,
         presentAmount: 2,
       },
     },
     {
-      info: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+      product: Product.create([
+        '감자칩',
+        1500,
+        5,
+        { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       quantity: 5,
       amount: 10,
-      isPromotionValid: true,
       inputs: ['N'],
       answer: {
-        product: { name: '감자칩', price: 1500, quantity: 5, promotion: { buy: 1, get: 1 } },
+        product: Product.create([
+          '감자칩',
+          1500,
+          5,
+          { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 4,
         presentAmount: 2,
       },
     },
   ])(
     '1+1 상품에서 프로모션을 못받는 상품을 그대로 결제할지 결정할 수 있다.',
-    async ({ info, quantity, amount, isPromotionValid, inputs, answer }) => {
+    async ({ product, quantity, amount, inputs, answer }) => {
       mockQuestions(inputs);
 
-      await PromotionService.promotionInputSystem(
-        { info, quantity, amount, isPromotionValid },
-        result,
-      );
+      await PromotionService.promotionInputSystem({ product, quantity, amount }, result);
 
       expect(result).toEqual([answer]);
     },
@@ -164,38 +228,55 @@ describe('프로모션 서비스 테스트', () => {
 
   test.each([
     {
-      info: { name: '탄산수', price: 1200, quantity: 5, promotion: { buy: 2, get: 1 } },
+      product: Product.create([
+        '탄산수',
+        1200,
+        5,
+        { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       quantity: 2,
       amount: 2,
       isPromotionValid: true,
       inputs: ['Y'],
       answer: {
-        product: { name: '탄산수', price: 1200, quantity: 5, promotion: { buy: 2, get: 1 } },
+        product: Product.create([
+          '탄산수',
+          1200,
+          5,
+          { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 3,
         presentAmount: 1,
       },
     },
     {
-      info: { name: '콜라', price: 1000, quantity: 10, promotion: { buy: 2, get: 1 } },
+      product: Product.create([
+        '콜라',
+        1000,
+        10,
+        { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       quantity: 8,
       amount: 8,
       isPromotionValid: true,
       inputs: ['N'],
       answer: {
-        product: { name: '콜라', price: 1000, quantity: 10, promotion: { buy: 2, get: 1 } },
+        product: Product.create([
+          '콜라',
+          1000,
+          10,
+          { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 8,
         presentAmount: 2,
       },
     },
   ])(
     '2+1 상품에서 무료로 상품을 더 받을지 결정할 수 있다.',
-    async ({ info, quantity, amount, isPromotionValid, inputs, answer }) => {
+    async ({ product, quantity, amount, inputs, answer }) => {
       mockQuestions(inputs);
 
-      await PromotionService.promotionInputSystem(
-        { info, quantity, amount, isPromotionValid },
-        result,
-      );
+      await PromotionService.promotionInputSystem({ product, quantity, amount }, result);
 
       expect(result).toEqual([answer]);
     },
@@ -203,38 +284,53 @@ describe('프로모션 서비스 테스트', () => {
 
   test.each([
     {
-      info: { name: '사이다', price: 1000, quantity: 8, promotion: { buy: 2, get: 1 } },
+      product: Product.create([
+        '사이다',
+        1000,
+        8,
+        { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       quantity: 8,
       amount: 10,
-      isPromotionValid: true,
       inputs: ['Y'],
       answer: {
-        product: { name: '사이다', price: 1000, quantity: 8, promotion: { buy: 2, get: 1 } },
+        product: Product.create([
+          '사이다',
+          1000,
+          8,
+          { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 10,
         presentAmount: 2,
       },
     },
     {
-      info: { name: '탄산수', price: 1200, quantity: 5, promotion: { buy: 2, get: 1 } },
+      product: Product.create([
+        '탄산수',
+        1200,
+        5,
+        { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       quantity: 5,
       amount: 5,
-      isPromotionValid: true,
       inputs: ['N'],
       answer: {
-        product: { name: '탄산수', price: 1200, quantity: 5, promotion: { buy: 2, get: 1 } },
+        product: Product.create([
+          '탄산수',
+          1200,
+          5,
+          { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 4,
         presentAmount: 1,
       },
     },
   ])(
     '2+1 상품에서 프로모션을 못받는 상품을 그대로 결제할지 결정할 수 있다.',
-    async ({ info, quantity, amount, isPromotionValid, inputs, answer }) => {
+    async ({ product, quantity, amount, inputs, answer }) => {
       mockQuestions(inputs);
 
-      await PromotionService.promotionInputSystem(
-        { info, quantity, amount, isPromotionValid },
-        result,
-      );
+      await PromotionService.promotionInputSystem({ product, quantity, amount }, result);
 
       expect(result).toEqual([answer]);
     },

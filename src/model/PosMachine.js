@@ -9,39 +9,50 @@ class PosMachine {
   }
 
   #getOrderProductsStock(name) {
-    return this.#stock.getProductsInStockByName(name);
+    const promotionProduct =
+      this.#stock.getProductsInStockByName(name).find((item) => item.hasPromotion()) || null;
+    const generalProduct =
+      this.#stock.getProductsInStockByName(name).find((item) => !item.hasPromotion()) || null;
+
+    return { promotionProduct, generalProduct };
   }
 
   checkOrderAboutPromotionProduct() {
     return this.#orderList.reduce((acc, [name, amount]) => {
-      const { info, isPromotionValid } = this.#findProductsHasPromotion(name);
-      if (!info) return acc;
-      const quantity = Math.min(info.quantity, amount);
-      acc.push({ info, quantity, amount, isPromotionValid });
+      const { product } = this.#findProductsHasPromotion(name);
+      if (!product) return acc;
+      const quantity = Math.min(product.getInfo().quantity, amount);
+      acc.push({ product, quantity, amount });
       return acc;
     }, []);
   }
 
   #findProductsHasPromotion(name) {
-    const product = this.#getOrderProductsStock(name).find((item) => item.hasPromotion());
-    if (!product) return { info: null, isPromotionValid: null };
-    return { info: product.getInfo(), isPromotionValid: product.isValidPromotion() };
+    const { promotionProduct } = this.#getOrderProductsStock(name);
+    if (!promotionProduct || !promotionProduct.getInfo().quantity) return { product: null };
+    return {
+      product: promotionProduct,
+    };
   }
 
   checkOrderAboutGeneralProduct() {
     return this.#orderList.reduce((acc, [name, amount]) => {
-      const { info } = this.#findProductsNotHasPromotion(name);
-      if (!info) return acc;
-      acc.push({ product: info, orderAmount: amount, presentAmount: 0 });
+      const { product } = this.#findProductsNotHasPromotion(name);
+      if (!product) return acc;
+      acc.push({ product, orderAmount: amount, presentAmount: 0 });
       return acc;
     }, []);
   }
 
   #findProductsNotHasPromotion(name) {
-    const products = this.#getOrderProductsStock(name);
-    if (products.length > 1) return { info: null };
-    if (products[0].hasPromotion()) return { info: null };
-    return { info: products[0].getInfo() };
+    const { promotionProduct, generalProduct } = this.#getOrderProductsStock(name);
+    if (!promotionProduct || !generalProduct) {
+      if (promotionProduct) return { product: null };
+      return { product: generalProduct };
+    }
+    if (promotionProduct && promotionProduct.getInfo().quantity === 0)
+      return { product: generalProduct };
+    return { product: null };
   }
 
   decreaseStock(shoppingList) {
@@ -54,11 +65,13 @@ class PosMachine {
   }
 
   #makeNewShoppingList(product, orderAmount) {
-    const products = this.#stock.getProductsInStockByName(product.name);
+    const products = this.#stock
+      .getProductsInStockByName(product.getInfo().name)
+      .filter((item) => item.getInfo().quantity);
     if (products.length > 1)
       return products.map((item) => {
-        if (item.hasPromotion()) return [item, Math.min(product.quantity, orderAmount)];
-        return [item, orderAmount - Math.min(product.quantity, orderAmount)];
+        if (item.hasPromotion()) return [item, Math.min(product.getInfo().quantity, orderAmount)];
+        return [item, orderAmount - Math.min(product.getInfo().quantity, orderAmount)];
       });
     return products.map((item) => [item, orderAmount]);
   }

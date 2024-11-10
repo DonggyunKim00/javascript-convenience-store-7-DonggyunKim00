@@ -1,28 +1,31 @@
+import Product from '../src/model/Product';
 import Receipt from '../src/model/Receipt';
 
 describe('영수증 테스트', () => {
   const shoppingList = [
     {
-      product: {
-        name: '사이다',
-        price: 1000,
-        quantity: 8,
-      },
+      product: Product.create([
+        '사이다',
+        1000,
+        8,
+        { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       orderAmount: 7,
       presentAmount: 2,
       promotion: 'ANY_PROMOTION',
     },
     {
-      product: { name: '물', price: 500, quantity: 10, promotion: null },
+      product: Product.create(['물', 500, 10, null]),
       orderAmount: 5,
       presentAmount: 0,
     },
     {
-      product: {
-        name: '콜라',
-        price: 1500,
-        quantity: 10,
-      },
+      product: Product.create([
+        '콜라',
+        1500,
+        10,
+        { buy: 2, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
+      ]),
       orderAmount: 12,
       presentAmount: 3,
       promotion: 'ANY_PROMOTION',
@@ -87,16 +90,12 @@ describe('영수증 테스트', () => {
   test('멤버십 할인의 최대 한도는 8,000원 이다.', () => {
     const newShoppingList = [
       {
-        product: { name: '물', price: 500, quantity: 10, promotion: null },
+        product: Product.create(['물', 500, 10, null]),
         orderAmount: 5,
         presentAmount: 0,
       },
       {
-        product: {
-          name: '맥북',
-          price: 100000,
-          quantity: 10,
-        },
+        product: Product.create(['맥북', 1000000, 10, null]),
         orderAmount: 2,
         presentAmount: 0,
       },

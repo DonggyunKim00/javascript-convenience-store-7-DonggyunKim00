@@ -41,26 +41,24 @@ describe('포스기 테스트', () => {
   test('주문 항목에 대해 프로모션이 적용 가능한 제품 정보를 재고에서 찾아 정리할 수 있다.', () => {
     const answer = [
       {
-        info: {
-          name: '프로틴바',
-          price: 1000,
-          quantity: 5,
-          promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
-        },
+        product: Product.create([
+          '프로틴바',
+          1000,
+          5,
+          { startDate: '2024-01-01', endDate: '2024-12-31' },
+        ]),
         quantity: 2,
         amount: 2,
-        isPromotionValid: true,
       },
       {
-        info: {
-          name: '맥북',
-          price: 2000000,
-          quantity: 10,
-          promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
-        },
+        product: Product.create([
+          '맥북',
+          2000000,
+          10,
+          { startDate: '2024-01-01', endDate: '2024-12-31' },
+        ]),
         quantity: 10,
         amount: 12,
-        isPromotionValid: true,
       },
     ];
     expect(posMachine.checkOrderAboutPromotionProduct()).toEqual(answer);
@@ -69,7 +67,7 @@ describe('포스기 테스트', () => {
   test('주문 항목에 대해 프로모션이 존재하지 않는 제품 정보를 재고에서 찾아 정리할 수 있다.', () => {
     const answer = [
       {
-        product: { name: '소고기', price: 10000, quantity: 3, promotion: null },
+        product: Product.create(['소고기', 10000, 3, null]),
         orderAmount: 3,
         presentAmount: 0,
       },
@@ -80,20 +78,25 @@ describe('포스기 테스트', () => {
   test('주문 항목의 재고가 올바르게 감소해야 한다.', () => {
     const shoppingList = [
       {
-        product: {
-          name: '프로틴바',
-          quantity: 5,
-          promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
-        },
+        product: Product.create([
+          '프로틴바',
+          1000,
+          5,
+          { startDate: '2024-01-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 2,
       },
-      { product: { name: '소고기', quantity: 3, promotion: null }, orderAmount: 3 },
       {
-        product: {
-          name: '맥북',
-          quantity: 10,
-          promotion: { startDate: '2024-01-01', endDate: '2024-12-31' },
-        },
+        product: Product.create(['소고기', 10000, 3, null]),
+        orderAmount: 3,
+      },
+      {
+        product: Product.create([
+          '맥북',
+          2000000,
+          10,
+          { startDate: '2024-01-01', endDate: '2024-12-31' },
+        ]),
         orderAmount: 12,
       },
     ];

@@ -18,16 +18,16 @@ class Receipt {
 
   getShoppingList() {
     return this.#shoppingList.map(({ product, orderAmount }) => ({
-      name: product.name,
+      name: product.getInfo().name,
       quantity: orderAmount,
-      totalPrice: product.price * orderAmount,
+      totalPrice: product.getInfo().price * orderAmount,
     }));
   }
 
   getPresentList() {
     return this.#shoppingList.reduce((acc, { product, presentAmount }) => {
       const newAcc = acc;
-      if (presentAmount) acc.push({ name: product.name, quantity: presentAmount });
+      if (presentAmount) acc.push({ name: product.getInfo().name, quantity: presentAmount });
       return newAcc;
     }, []);
   }
@@ -42,10 +42,10 @@ class Receipt {
 
   #moneyInfoCalculate(acc, product, orderAmount, presentAmount) {
     acc.totalOrderCount += orderAmount;
-    acc.shoppingTotalPrice += product.price * orderAmount;
-    acc.promotionDiscount += product.price * presentAmount;
+    acc.shoppingTotalPrice += product.getInfo().price * orderAmount;
+    acc.promotionDiscount += product.getInfo().price * presentAmount;
     if (this.#hasMembership && !presentAmount) {
-      acc.membershipDiscount += product.price * orderAmount * 0.3;
+      acc.membershipDiscount += product.getInfo().price * orderAmount * 0.3;
       acc.membershipDiscount = Math.min(8000, acc.membershipDiscount);
     }
     acc.totalPay = acc.shoppingTotalPrice - acc.promotionDiscount - acc.membershipDiscount;
