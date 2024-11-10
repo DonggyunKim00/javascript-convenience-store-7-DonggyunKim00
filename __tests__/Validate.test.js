@@ -19,6 +19,7 @@ describe('validate 테스트', () => {
     '[abc-1a]',
     '[-]',
     '[ - ]',
+    '[사이다-1],[사이다-1]',
   ])('validateOrderInput(): input으로 "%s" 들어왔을때 예외가 발생한다.', (input) => {
     expect(() => validateOrderInput(input)).toThrow();
   });

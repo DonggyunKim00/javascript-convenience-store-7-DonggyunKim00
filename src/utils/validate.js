@@ -18,12 +18,21 @@ const validFunction = {
 
   hasProductData: (productsData, orderName) =>
     productsData.find((product) => product.name === orderName),
+
+  hasDuplicateInput: (input) => {
+    const flatOrderNames = parseOrderInput(input)
+      .map(([name]) => name)
+      .flat();
+
+    return flatOrderNames.length !== new Set(flatOrderNames).size;
+  },
 };
 
 export const validateOrderInput = (input) => {
   if (validFunction.isEmptyInput(input)) throw new Error(ERROR_MESSAGE.WRONG_INPUT);
   if (validFunction.isInvalidFormat(input)) throw new Error(ERROR_MESSAGE.WRONG_ORDER_FORM);
   if (validFunction.hasEmptyField(input)) throw new Error(ERROR_MESSAGE.WRONG_ORDER_FORM);
+  if (validFunction.hasDuplicateInput(input)) throw new Error(ERROR_MESSAGE.WRONG_ORDER_FORM);
 };
 
 export const validateOrderData = (hasProduct, isExceedQuantity) => {
