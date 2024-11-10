@@ -1,4 +1,5 @@
 import StoreController from './controller/StoreController.js';
+import { readAndValidateShopping } from './utils/readInput.js';
 
 class App {
   #storeController;
@@ -9,8 +10,15 @@ class App {
 
   async run() {
     this.#storeController.init();
-    this.#storeController.displayStoreStock();
-    await this.#storeController.purchaseProcess();
+    await this.#controllerPlay();
+  }
+
+  async #controllerPlay() {
+    while (true) {
+      await this.#storeController.play();
+      const input = await readAndValidateShopping();
+      if (input === 'N') break;
+    }
   }
 }
 

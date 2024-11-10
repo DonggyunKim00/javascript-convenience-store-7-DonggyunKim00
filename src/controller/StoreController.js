@@ -38,7 +38,13 @@ class StoreController {
     this.#stock = new Stock(products);
   }
 
-  displayStoreStock() {
+  async play() {
+    this.#displayStoreStock();
+    await this.#purchaseProcess();
+    this.#displayRecipt();
+  }
+
+  #displayStoreStock() {
     OutputView.printIntro();
 
     this.#stock.getProductsInfo().forEach(({ name, price, quantity, promotion }) => {
@@ -46,12 +52,11 @@ class StoreController {
     });
   }
 
-  async purchaseProcess() {
+  async #purchaseProcess() {
     await this.#createPosMachine();
     const shoppingList = await this.#checkOrderForPromotion();
     this.#posMachine.decreaseStock(shoppingList);
     await this.#createReceipt(shoppingList);
-    this.displayRecipt();
   }
 
   async #createPosMachine() {
@@ -89,7 +94,7 @@ class StoreController {
     this.#receipt = new Receipt(shoppingList, hasMembership);
   }
 
-  displayRecipt() {
+  #displayRecipt() {
     OutputView.printOrders(this.#receipt.getShoppingList());
     OutputView.printPresent(this.#receipt.getPresentList());
     OutputView.printPayInfo(this.#receipt.getPayInfo());

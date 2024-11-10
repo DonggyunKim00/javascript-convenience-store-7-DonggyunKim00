@@ -29,11 +29,9 @@ class PromotionService {
     const nonePromotion = amount - quantity + product.promotion.get;
     if (amount >= product.quantity)
       return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion, result);
-    if (quantity === amount && amount % 3 === 1)
-      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion, result);
     if (quantity === amount && amount % 3 === 2)
       return await PromotionService.#pushAdditionResult(product, quantity, result);
-    return result.push({ product, orderAmount: amount, presentAmount: quantity / 3 });
+    return result.push({ product, orderAmount: amount, presentAmount: Math.floor(quantity / 3) });
   }
 
   static async #pushPurchaseResult(product, amount, nonePromotion, result) {
