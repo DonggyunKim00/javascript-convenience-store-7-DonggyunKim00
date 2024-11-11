@@ -81,32 +81,32 @@ describe('프로모션 서비스 테스트', () => {
       product: Product.create([
         '오렌지주스',
         1800,
-        9,
+        2,
         { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
       ]),
-      quantity: 7,
-      amount: 7,
+      quantity: 1,
+      amount: 1,
       inputs: ['Y'],
       answer: {
         product: Product.create([
           '오렌지주스',
           1800,
-          9,
+          2,
           { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
         ]),
-        orderAmount: 8,
-        presentAmount: 4,
+        orderAmount: 2,
+        presentAmount: 1,
       },
     },
     {
       product: Product.create([
         '오렌지주스',
         1800,
-        9,
+        2,
         { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
       ]),
-      quantity: 3,
-      amount: 3,
+      quantity: 1,
+      amount: 1,
       inputs: ['N'],
       answer: {
         product: Product.create([
@@ -115,8 +115,8 @@ describe('프로모션 서비스 테스트', () => {
           9,
           { buy: 1, get: 1, startDate: '2024-11-01', endDate: '2024-12-31' },
         ]),
-        orderAmount: 3,
-        presentAmount: 1,
+        orderAmount: 1,
+        presentAmount: 0,
       },
     },
     {

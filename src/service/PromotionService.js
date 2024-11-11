@@ -23,7 +23,7 @@ class PromotionService {
     if (productQuantity % 2 === 1 && amount >= productQuantity)
       return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion + 1, result);
     if (productQuantity > amount && amount % 2 === 1)
-      return PromotionService.#pushAdditionResult(product, amount, quantity, result);
+      return PromotionService.#pushAdditionResult(product, quantity, result);
     return PromotionService.#pushNoneQuestionResult(product, amount, quantity, result);
   }
 
