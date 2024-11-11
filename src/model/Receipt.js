@@ -44,11 +44,22 @@ class Receipt {
     acc.totalOrderCount += orderAmount;
     acc.shoppingTotalPrice += product.getInfo().price * orderAmount;
     acc.promotionDiscount += product.getInfo().price * presentAmount;
-    if (this.#hasMembership && !presentAmount)
-      acc.membershipDiscount += product.getInfo().price * orderAmount * 0.3;
+    if (this.#hasMembership)
+      acc.membershipDiscount += Receipt.#membershipCalculate(product, orderAmount, presentAmount);
     acc.membershipDiscount = Math.min(8000, acc.membershipDiscount);
     acc.totalPay = acc.shoppingTotalPrice - acc.promotionDiscount - acc.membershipDiscount;
     return acc;
+  }
+
+  static #membershipCalculate(product, orderAmount, presentAmount) {
+    if (presentAmount)
+      return (
+        product.getInfo().price *
+        (orderAmount -
+          presentAmount * (product.getInfo().promotion.buy + product.getInfo().promotion.get)) *
+        0.3
+      );
+    return product.getInfo().price * orderAmount * 0.3;
   }
 }
 

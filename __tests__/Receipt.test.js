@@ -64,8 +64,8 @@ describe('영수증 테스트', () => {
         totalOrderCount: 24,
         shoppingTotalPrice: 27500,
         promotionDiscount: 6500,
-        membershipDiscount: 750,
-        totalPay: 20250,
+        membershipDiscount: 2400,
+        totalPay: 18600,
       },
     },
     {
