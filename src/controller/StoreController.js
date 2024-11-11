@@ -35,6 +35,8 @@ class StoreController {
       return Product.create([name, price, quantity, promotion]);
     });
 
+    products.push(Product.create(['오렌지주스', 1800, 0, null]));
+    products.push(Product.create(['탄산수', 1200, 0, null]));
     this.#stock = new Stock(products);
   }
 
