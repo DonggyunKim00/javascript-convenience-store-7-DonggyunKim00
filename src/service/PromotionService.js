@@ -18,25 +18,37 @@ class PromotionService {
   static async #whenBuyOnePlusOne(product, quantity, amount, result) {
     const productQuantity = product.getInfo().quantity;
     const nonePromotion = amount - quantity;
-    if (productQuantity > amount && amount % 2 === 1)
-      return await PromotionService.#pushAdditionResult(product, quantity, result);
-    if (productQuantity % 2 === 0 && amount > quantity)
-      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion, result);
-    if (productQuantity % 2 === 1 && (amount > quantity || amount === productQuantity))
+    if (productQuantity % 2 === 0 && amount >= productQuantity)
+      return PromotionService.#pushNoneQuestionResult(product, amount, quantity, result);
+    if (productQuantity % 2 === 1 && amount >= productQuantity)
       return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion + 1, result);
-    return result.push({ product, orderAmount: amount, presentAmount: quantity / 2 });
+    if (productQuantity > amount && amount % 2 === 1)
+      return PromotionService.#pushAdditionResult(product, amount, quantity, result);
+    return PromotionService.#pushNoneQuestionResult(product, amount, quantity, result);
   }
 
   static async #whenBuyTwoPlusOne(product, quantity, amount, result) {
     const productQuantity = product.getInfo().quantity;
-    const nonePromotion = amount - quantity;
+    const nonePromotion = amount - quantity + (productQuantity % 3);
+    if (productQuantity % 3 === 0 && amount >= productQuantity)
+      return PromotionService.#pushNoneQuestionResult(product, amount, quantity, result);
+    if (productQuantity % 3 === 1 && amount > productQuantity)
+      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion, result);
+    if (productQuantity % 3 === 2 && amount >= productQuantity)
+      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion, result);
     if (productQuantity > amount && amount % 3 === 2)
       return await PromotionService.#pushAdditionResult(product, quantity, result);
-    if (productQuantity % 3 === 1 && amount > quantity)
-      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion + 1, result);
-    if (productQuantity % 3 === 2 && (amount > quantity || amount === productQuantity))
-      return await PromotionService.#pushPurchaseResult(product, amount, nonePromotion + 2, result);
-    return result.push({ product, orderAmount: amount, presentAmount: Math.floor(quantity / 3) });
+    return PromotionService.#pushNoneQuestionResult(product, amount, quantity, result);
+  }
+
+  static #pushNoneQuestionResult(product, amount, quantity, result) {
+    const { get, buy } = product.getInfo().promotion;
+
+    return result.push({
+      product,
+      orderAmount: amount,
+      presentAmount: Math.floor(quantity / (get + buy)),
+    });
   }
 
   static async #pushPurchaseResult(product, amount, nonePromotion, result) {
