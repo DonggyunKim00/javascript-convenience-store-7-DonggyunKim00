@@ -7,5 +7,8 @@ export const parseOrderInput = (orders) =>
 export const getTextLength = (str) =>
   Array.from(str).reduce((len, char) => len + (char.charCodeAt(0) > 255 ? 2 : 1), 0);
 
-export const formatWithPadding = (text, totalLength) =>
+export const formatWithPaddingStart = (text, totalLength) =>
+  ' '.repeat(totalLength - getTextLength(text)) + text;
+
+export const formatWithPaddingEnd = (text, totalLength) =>
   text + ' '.repeat(totalLength - getTextLength(text));

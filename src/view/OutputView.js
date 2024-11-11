@@ -1,5 +1,5 @@
 import { Console } from '@woowacourse/mission-utils';
-import { formatWithPadding } from '../utils/parse.js';
+import { formatWithPaddingEnd, formatWithPaddingStart } from '../utils/parse.js';
 
 const OutputView = {
   OUTPUT_MESSAGE: Object.freeze({
@@ -8,32 +8,31 @@ const OutputView = {
     PRODUCT_INFO: (name, price, quantity, promotionName) =>
       `- ${name} ${price}원 ${quantity} ${promotionName}`,
 
-    STORE_NAME: '===========W 편의점=============\n상품명\t\t 수량\t 금액',
+    STORE_NAME: '===========W 편의점===========\n상품명\t\t 수량\t 금액',
 
     ORDER_PRODUCT: (name, quantity, price) => {
-      const namePadded = formatWithPadding(name, 17);
-      const quantityPadded = formatWithPadding(quantity.toString(), 8);
-      return `${namePadded}${quantityPadded}${price}`;
+      const namePadded = formatWithPaddingEnd(name, 17);
+      const quantityPadded = formatWithPaddingEnd(quantity.toString(), 5);
+      const pricePadded = formatWithPaddingStart(price, 8);
+      return `${namePadded}${quantityPadded}${pricePadded}`;
     },
 
     PRESENT_PRODUCT: (name, quantity) => {
-      const namePadded = formatWithPadding(name, 17);
-      const quantityPadded = formatWithPadding(quantity.toString(), 8);
+      const namePadded = formatWithPaddingEnd(name, 17);
+      const quantityPadded = formatWithPaddingEnd(quantity.toString(), 5);
       return `${namePadded}${quantityPadded}`;
     },
 
-    STORE_PRESENT: '===========증    정=============',
+    STORE_PRESENT: '===========증    정===========',
 
-    SEPERATOR: '================================',
+    SEPERATOR: '==============================',
 
     PAY_INFO: (type, name, price, quantity = '') => {
-      const namePadded = formatWithPadding(name, 17);
-      const quantityPadded = formatWithPadding(quantity.toString(), 8);
-
       let formattedPrice = price;
-      if (type === 'minus') formattedPrice = `-${price}`;
+      if (type === 'minus' && price === '0') formattedPrice = `-${price}${' '.repeat(4)}`;
+      if (type === 'minus' && price !== '0') formattedPrice = `-${price}`;
 
-      return `${namePadded}${quantityPadded}${formattedPrice}`;
+      return `${formatWithPaddingEnd(name, 17)}${formatWithPaddingEnd(quantity.toString(), 5)}${formatWithPaddingStart(formattedPrice, 8)}`;
     },
   }),
 
