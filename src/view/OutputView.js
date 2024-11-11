@@ -1,36 +1,39 @@
 import { Console } from '@woowacourse/mission-utils';
-import { getTextLength } from '../utils/parse.js';
+import { formatWithPadding } from '../utils/parse.js';
 
 const OutputView = {
   OUTPUT_MESSAGE: Object.freeze({
     WELCOME_INTRO: '안녕하세요. W편의점입니다.\n현재 보유하고 있는 상품입니다.\n',
+
     PRODUCT_INFO: (name, price, quantity, promotionName) =>
       `- ${name} ${price}원 ${quantity} ${promotionName}`,
-    STORE_NAME: '===========W 편의점=============\n상품명\t\t 수량\t 금액',
-    ORDER_PRODUCT: (name, quantity, price) => {
-      const namePadded = name + ' '.repeat(17 - getTextLength(name));
-      const quantityPadded =
-        quantity.toString() + ' '.repeat(8 - getTextLength(quantity.toString()));
 
+    STORE_NAME: '===========W 편의점=============\n상품명\t\t 수량\t 금액',
+
+    ORDER_PRODUCT: (name, quantity, price) => {
+      const namePadded = formatWithPadding(name, 17);
+      const quantityPadded = formatWithPadding(quantity.toString(), 8);
       return `${namePadded}${quantityPadded}${price}`;
     },
-    PRESENT_PRODUCT: (name, quantity) => {
-      const namePadded = name + ' '.repeat(17 - getTextLength(name));
-      const quantityPadded =
-        quantity.toString() + ' '.repeat(8 - getTextLength(quantity.toString()));
 
+    PRESENT_PRODUCT: (name, quantity) => {
+      const namePadded = formatWithPadding(name, 17);
+      const quantityPadded = formatWithPadding(quantity.toString(), 8);
       return `${namePadded}${quantityPadded}`;
     },
-    STORE_PRESENT: '===========증    정=============',
-    SEPERATOR: '================================',
-    PAY_INFO: (type, name, price, quantity = '') => {
-      const namePadded = name + ' '.repeat(17 - getTextLength(name));
-      const quantityPadded =
-        quantity.toString() + ' '.repeat(8 - getTextLength(quantity.toString()));
-      let newPrice = price;
-      if (type === 'minus') newPrice = `-${price}`;
 
-      return `${namePadded}${quantityPadded}${newPrice}`;
+    STORE_PRESENT: '===========증    정=============',
+
+    SEPERATOR: '================================',
+
+    PAY_INFO: (type, name, price, quantity = '') => {
+      const namePadded = formatWithPadding(name, 17);
+      const quantityPadded = formatWithPadding(quantity.toString(), 8);
+
+      let formattedPrice = price;
+      if (type === 'minus') formattedPrice = `-${price}`;
+
+      return `${namePadded}${quantityPadded}${formattedPrice}`;
     },
   }),
 
