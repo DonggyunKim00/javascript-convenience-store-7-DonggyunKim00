@@ -4,11 +4,11 @@ class PromotionService {
   static async promotionInputSystem({ product, quantity, amount }, result) {
     if (!product.isValidPromotion())
       return await PromotionService.#whenInvalidPromotion(product, amount, result);
-    if (product.getInfo().promotion.buy === 1 && product.isValidPromotion())
+    if (product.getInfo().promotion.buy === 1)
       return await PromotionService.#whenBuyOnePlusOne(product, quantity, amount, result);
-    if (product.getInfo().promotion.buy === 2 && product.isValidPromotion())
+    if (product.getInfo().promotion.buy === 2)
       return await PromotionService.#whenBuyTwoPlusOne(product, quantity, amount, result);
-    return null;
+    return await PromotionService.#whenInvalidPromotion(product, amount, result);
   }
 
   static async #whenInvalidPromotion(product, amount, result) {
